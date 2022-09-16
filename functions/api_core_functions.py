@@ -19,5 +19,5 @@ def connect_to_db():
                            cursorclass=pymysql.cursors.DictCursor)
 
 
-denied_access = jsonify({'code': 401, 'message': 'You are not authorised to use this API. If you believe this to be in '
-                                                 'error please contact the admin at admin@grouprota.com'})
+# denied_access = jsonify({'code': 401, 'message': 'You are not authorised to use this API. If you believe this to be in '
+#                                                  'error please contact the admin at admin@grouprota.com'})

@@ -83,7 +83,8 @@ def create_company():
     if access_control(uuid):
         return make_company(uuid, name)
     else:
-        return denied_access
+        return jsonify({'code': 401, 'message': 'You are not authorised to use this API. If you believe this to be in '
+                                                 'error please contact the admin at admin@grouprota.com'})
 
 
 @app.route('/company/get', methods=['GET'])
@@ -97,7 +98,8 @@ def read_company():
     if access_control(uuid):
         return get_company_for_user(uuid)
     else:
-        return denied_access
+        return jsonify({'code': 401, 'message': 'You are not authorised to use this API. If you believe this to be in '
+                                                 'error please contact the admin at admin@grouprota.com'})
 
 
 @app.route('/company/update', methods=['GET'])
@@ -121,4 +123,5 @@ def update_company():
         # send info to the company_update function to update the company details
         return company_update(ucid, name, key)
     else:
-        return denied_access
+        return jsonify({'code': 401, 'message': 'You are not authorised to use this API. If you believe this to be in '
+                                                 'error please contact the admin at admin@grouprota.com'})
