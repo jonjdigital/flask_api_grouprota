@@ -5,7 +5,6 @@ from functions.user_functions import *
 from functions.company_functions import *
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-
 # load env variables from the .env file
 load_dotenv()
 
@@ -13,14 +12,14 @@ load_dotenv()
 app = Flask(__name__)
 
 # declare unauthorised access reponse
-denied_access = jsonify({'code': 401, 'message': 'You are not authorised to use this API. If you believe this to be in '
-                                                 'error please contact the admin at admin@grouprota.com'})
+
 
 # if app is hosted on prod server, run proxy check
 if os.environ.get('SERVER') == "PROD":
     app.wsgi_app = ProxyFix(
         app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1
     )
+
 
 @app.route('/')
 def hello_world():  # put application's code here

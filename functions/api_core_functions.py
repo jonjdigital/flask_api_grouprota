@@ -1,4 +1,6 @@
-import os, pymysql.cursors
+import os
+import pymysql.cursors
+from flask import jsonify
 
 # save db login vars to variables
 db_host = os.environ.get("DB_HOST")
@@ -16,3 +18,6 @@ def connect_to_db():
                            charset='utf8mb4',
                            cursorclass=pymysql.cursors.DictCursor)
 
+
+denied_access = jsonify({'code': 401, 'message': 'You are not authorised to use this API. If you believe this to be in '
+                                                 'error please contact the admin at admin@grouprota.com'})
