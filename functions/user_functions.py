@@ -12,7 +12,7 @@ def access_control(uuid):
 
 def restrict_to_api_user(key):
     user = get_uuid_from_key(key)
-    if user.count() == 1:
+    if user != False:
         return True
     else:
         return False
@@ -78,7 +78,9 @@ def get_uuid_from_key(key):
             connection.commit()
             result = cursor.fetchone()
             # print(result)
-            return result
+            if result['uuid']:
+                return result['uuid']
+            return False
 
 
 def check_if_exists(uuid):
@@ -89,7 +91,6 @@ def check_if_exists(uuid):
             cursor.execute(sql, uuid)
             connection.commit()
             result = cursor.fetchone()
-            if result.count() == 0:
-                return False
-            # print(result)
-            return True
+            if result['uuid']:
+                return True
+            return False

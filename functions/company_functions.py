@@ -13,13 +13,26 @@ def make_company(uuid, name):
             return jsonify({'code': 200, 'message': 'Company Successfully Saved'})
 
 
-def get_company_for_user(uuid):
+def get_companies_for_user(uuid):
     # return all companies that user is owner of
     con = funcs1.connect_to_db()
     sql = "select * from company where owner_uuid = %s"
     with con:
         with con.cursor() as cursor:
             cursor.execute(sql, uuid)
+            con.commit()
+            result = cursor.fetchall()
+            # return all records
+            return result
+
+
+def get_company_details(ucid):
+    # return all companies that user is owner of
+    con = funcs1.connect_to_db()
+    sql = "select * from company where ucid = %s"
+    with con:
+        with con.cursor() as cursor:
+            cursor.execute(sql, ucid)
             con.commit()
             result = cursor.fetchall()
             # return all records

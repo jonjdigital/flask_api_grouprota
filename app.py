@@ -58,6 +58,7 @@ def user_get_key():
         uuid = str(args['uuid'])
     else:
         return jsonify({"code": 400, "message": "Error: No UUID field provided. Please specify an UUID."})
+    
     if check_if_exists(uuid):
         key = get_key(uuid)
         if key:
@@ -66,6 +67,7 @@ def user_get_key():
             return jsonify({"code": 401, "message": "No key is available for this UUID. Please try another UUID"})
     else:
         return jsonify({"code": 401, "message": "This user does not exist"})
+    # return check_if_exists(uuid)
 
 
 @app.route('/company/create', methods=['GET'])
@@ -87,19 +89,33 @@ def create_company():
                                                  'error please contact the admin at admin@grouprota.com'})
 
 
-@app.route('/company/get', methods=['GET'])
-def read_company():
+@app.route('/company/get_all', methods=['GET'])
+def read_companies():
     args = request.args
     # check if uuid is present in the uri
     if 'uuid' in request.args:
         uuid = str(args['uuid'])
     else:
         return jsonify({"code": 400, "message": "Error: No UUID field provided. Please specify an UUID."})
-    if access_control(uuid):
-        return get_company_for_user(uuid)
+    if access_control(uuid) != False:
+        return jsonify(get_companies_for_user(uuid))
     else:
         return jsonify({'code': 401, 'message': 'You are not authorised to use this API. If you believe this to be in '
                                                  'error please contact the admin at admin@grouprota.com'})
+
+
+@app.route('/company/read', methods=['GET'])
+def read_company():
+    args = request.args
+    # check if uuid is present in the uri
+    if 'ucid' in request.args:
+        ucid = str(args['ucid'])
+        # print(ucid)
+    else:
+        return jsonify({"code": 400, "message": "Error: No UCID field provided. Please specify an UCID."})
+    company = get_company_details(ucid)[0]
+    print(company)
+    return company
 
 
 @app.route('/company/update', methods=['GET'])
