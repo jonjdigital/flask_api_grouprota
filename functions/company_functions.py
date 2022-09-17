@@ -36,7 +36,7 @@ def get_company_details(ucid):
             con.commit()
             result = cursor.fetchall()
             # return all records
-            return result
+            return result[0]
 
 
 def company_update(ucid, name, key):
@@ -51,8 +51,8 @@ def company_update(ucid, name, key):
             con.commit()
             owner_id = int(cursor.fetchone()['owner_uuid'])
             # print(key)
-            user = int(user_funcs.get_uuid_from_key(key)['uuid'])
-
+            user = int(user_funcs.get_uuid_from_key(key))
+            # return user
             if owner_id == user:
                 sql = "update company set company_name = %s where owner_uuid = %s and ucid = %s"
                 cursor.execute(sql, (name, user, ucid))

@@ -113,7 +113,7 @@ def read_company():
         # print(ucid)
     else:
         return jsonify({"code": 400, "message": "Error: No UCID field provided. Please specify an UCID."})
-    company = get_company_details(ucid)[0]
+    company = get_company_details(ucid)
     print(company)
     return company
 
@@ -121,6 +121,7 @@ def read_company():
 @app.route('/company/update', methods=['GET'])
 def update_company():
     args = request.args
+    print(args)
     # check if uuid, ucid and name are present in the uri
     if 'key' in request.args:
         key = str(args['key'])
@@ -135,7 +136,10 @@ def update_company():
     else:
         return jsonify({"code": 400, "message": "Error: No Name provided. Please specify a Name."})
 
-    if (verify_key(key)):
+    #check if the key matches the user who owns the company
+    company_owner = get_company_details(ucid)
+    # return str(company_owner['owner_uuid'])
+    if (verify_key(company_owner['owner_uuid'], key)):
         # send info to the company_update function to update the company details
         return company_update(ucid, name, key)
     else:
