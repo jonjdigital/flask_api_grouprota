@@ -145,3 +145,8 @@ def update_company():
     else:
         return jsonify({'code': 401, 'message': 'You are not authorised to use this API. If you believe this to be in '
                                                  'error please contact the admin at admin@grouprota.com'})
+
+
+@app.route('/system/read_environ', methods=['GET'])
+def display_envs():
+    return os.environ
