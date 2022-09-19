@@ -149,4 +149,5 @@ def update_company():
 
 @app.route('/system/read_environ', methods=['GET'])
 def display_envs():
-    return os.environ
+    print(os.environ)
+    return "check log"
