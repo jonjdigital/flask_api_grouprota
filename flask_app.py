@@ -14,7 +14,7 @@ app = Flask(__name__)
 # declare unauthorised access reponse
 
 
-# if app is hosted on prod server, run proxy check
+# # if app is hosted on prod server, run proxy check
 # if os.environ.get('SERVER') == "PROD":
 #     app.wsgi_app = ProxyFix(
 #         app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1
