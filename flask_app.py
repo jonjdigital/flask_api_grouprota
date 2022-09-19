@@ -1,3 +1,4 @@
+import json
 from flask import Flask, request, jsonify
 from dotenv import load_dotenv
 from functions.api_core_functions import *
@@ -121,7 +122,7 @@ def read_company():
 @app.route('/company/update', methods=['GET'])
 def update_company():
     args = request.args
-    print(args)
+    # print(args)
     # check if uuid, ucid and name are present in the uri
     if 'key' in request.args:
         key = str(args['key'])
@@ -149,5 +150,13 @@ def update_company():
 
 @app.route('/system/read_environ', methods=['GET'])
 def display_envs():
-    print(os.environ)
-    return "check log"
+    args = request.args
+    if 'key' in request.args:
+        key = str(args['key'])
+    else:
+        return jsonify({"code": 401, "message": "Access to this route is restricted"})
+    if key == os.environ.get('DEBUG_KEY'):
+        return os.environ.__dict__['_data']
+    else:
+        return jsonify({"code": 401, "message": "Access to this route is restricted"})
+    # return "hi"
