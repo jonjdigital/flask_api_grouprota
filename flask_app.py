@@ -49,7 +49,10 @@ def user_signup():
     else:
         return jsonify({"code": 400, "message": 'Error: No Email field provided. Please specify an Email.'})
         # return "Error: No Email field provided. Please specify an Email."
-    return signup_user(uuid, email)
+    if(signup_user(uuid, email)):
+        return "Hi"
+    else:
+        return "boooo"
 
 
 # declare route to follow when user is requesting API key
