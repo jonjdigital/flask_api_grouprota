@@ -10,6 +10,7 @@ def access_control(uuid):
     else:
         return False
 
+
 def restrict_to_api_user(key):
     user = get_uuid_from_key(key)
     if user != False:
@@ -18,7 +19,7 @@ def restrict_to_api_user(key):
         return False
 
 
-def signup_user(uuid, email):
+def signup_user(uuid, email, type):
     characters = "abcdefghijklmnopqrstuvwxyzABCEDFGHIJKLMNOPQRSTUVWXYZ0123456789"
     random_str = ''.join(random.choice(characters) for i in range(20))
     connection = funcs1.connect_to_db()
@@ -26,23 +27,29 @@ def signup_user(uuid, email):
         with connection.cursor() as cursor:
             # insert uuid and random string into api_key table
             sql = "insert into api_keys (uuid, api_key) values (%s, %s)"
-            print(sql)
+            # print(sql)
             cursor.execute(sql, (uuid, random_str))
             connection.commit()
 
             # insert uuid and email into users table
             sql = "insert into users (uuid,email) values (%s,%s)"
-            print(sql)
+            # print(sql)
             cursor.execute(sql, (uuid, email))
             connection.commit()
 
             # read back the users info back to the application
             sql = "select api_keys.uuid, api_keys.api_key, users.email from api_keys inner join users on api_keys.uuid=users.uuid where api_keys.uuid = %s"
-            print(sql)
+            # print(sql)
             cursor.execute(sql, uuid)
             result = cursor.fetchone()
-            print(result)
-            return result
+            # print(result)
+            print("TYPE: " + type)
+            if str(type) == 'check':
+                print("TYPE2: " + type)
+                check_if_exists(uuid, email)
+                return True
+            else:
+                return result
 
 
 def get_key(uuid):
@@ -83,7 +90,7 @@ def get_uuid_from_key(key):
             return False
 
 
-def check_if_exists(uuid):
+def check_if_exists(uuid, email):
     connection = funcs1.connect_to_db()
     with connection:
         with connection.cursor() as cursor:
@@ -91,6 +98,10 @@ def check_if_exists(uuid):
             cursor.execute(sql, uuid)
             connection.commit()
             result = cursor.fetchone()
-            if result['uuid']:
+            print(result)
+            if result is None:
+                if signup_user(uuid, email, 'check'):
+                    return True
+                # check_if_exists(uuid, email)
+            else:
                 return True
-            return False

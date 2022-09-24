@@ -49,10 +49,7 @@ def user_signup():
     else:
         return jsonify({"code": 400, "message": 'Error: No Email field provided. Please specify an Email.'})
         # return "Error: No Email field provided. Please specify an Email."
-    if(signup_user(uuid, email)):
-        return "Hi"
-    else:
-        return "boooo"
+    return signup_user(uuid, email, 'signup')
 
 
 # declare route to follow when user is requesting API key
@@ -64,8 +61,12 @@ def user_get_key():
         uuid = str(args['uuid'])
     else:
         return jsonify({"code": 400, "message": "Error: No UUID field provided. Please specify an UUID."})
-
-    if check_if_exists(uuid):
+    if 'email' in request.args:
+        email = str(args['email'])
+    else:
+        return jsonify({"code": 400, "message": 'Error: No Email field provided. Please specify an Email.'})
+        # return "Error: No Email field provided. Please specify an Email."
+    if check_if_exists(uuid, email):
         key = get_key(uuid)
         if key:
             return jsonify({"code": 200, "api_key": key['api_key']})
