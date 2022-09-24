@@ -51,6 +51,7 @@ def user_signup():
         # return "Error: No Email field provided. Please specify an Email."
     if not check_if_exists(uuid, email):
         return signup_user(uuid, email, 'signup')
+    user_get_key
 
 
 # declare route to follow when user is requesting API key
