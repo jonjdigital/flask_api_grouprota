@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from functions.api_core_functions import *
 from functions.user_functions import *
 from functions.company_functions import *
+
 # from werkzeug.middleware.proxy_fix import ProxyFix
 
 # load env variables from the .env file
@@ -11,6 +12,7 @@ load_dotenv()
 
 # initiate the flask object
 app = Flask(__name__)
+
 
 # declare unauthorised access reponse
 
@@ -59,11 +61,11 @@ def user_get_key():
         uuid = str(args['uuid'])
     else:
         return jsonify({"code": 400, "message": "Error: No UUID field provided. Please specify an UUID."})
-    
+
     if check_if_exists(uuid):
         key = get_key(uuid)
         if key:
-            return key
+            return jsonify({"code": 200, "api_key": key['api_key']})
         else:
             return jsonify({"code": 401, "message": "No key is available for this UUID. Please try another UUID"})
     else:
@@ -87,7 +89,7 @@ def create_company():
         return make_company(uuid, name)
     else:
         return jsonify({'code': 401, 'message': 'You are not authorised to use this API. If you believe this to be in '
-                                                 'error please contact the admin at admin@grouprota.com'})
+                                                'error please contact the admin at admin@grouprota.com'})
 
 
 @app.route('/company/get_all', methods=['GET'])
@@ -102,7 +104,7 @@ def read_companies():
         return jsonify(get_companies_for_user(uuid))
     else:
         return jsonify({'code': 401, 'message': 'You are not authorised to use this API. If you believe this to be in '
-                                                 'error please contact the admin at admin@grouprota.com'})
+                                                'error please contact the admin at admin@grouprota.com'})
 
 
 @app.route('/company/read', methods=['GET'])
@@ -137,7 +139,7 @@ def update_company():
     else:
         return jsonify({"code": 400, "message": "Error: No Name provided. Please specify a Name."})
 
-    #check if the key matches the user who owns the company
+    # check if the key matches the user who owns the company
     company_owner = get_company_details(ucid)
     # return str(company_owner['owner_uuid'])
     if (verify_key(company_owner['owner_uuid'], key)):
@@ -145,7 +147,7 @@ def update_company():
         return company_update(ucid, name, key)
     else:
         return jsonify({'code': 401, 'message': 'You are not authorised to use this API. If you believe this to be in '
-                                                 'error please contact the admin at admin@grouprota.com'})
+                                                'error please contact the admin at admin@grouprota.com'})
 
 
 @app.route('/system/read_environ', methods=['GET'])
