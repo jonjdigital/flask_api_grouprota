@@ -5,7 +5,7 @@ from flask import jsonify
 
 def make_company(uuid, name):
     con = funcs1.connect_to_db()
-    sql = "insert into company (company_name, owner_uuid) VALUES (%s,%s)"
+    sql = "insert into company_backup (company_name, owner_uuid) VALUES (%s,%s)"
     with con:
         with con.cursor() as cursor:
             cursor.execute(sql, (name, uuid))
@@ -16,7 +16,7 @@ def make_company(uuid, name):
 def get_companies_for_user(uuid):
     # return all companies that user is owner of
     con = funcs1.connect_to_db()
-    sql = "select * from company where owner_uuid = %s"
+    sql = "select * from company_backup where owner_uuid = %s"
     with con:
         with con.cursor() as cursor:
             cursor.execute(sql, uuid)
@@ -29,7 +29,7 @@ def get_companies_for_user(uuid):
 def get_company_details(ucid):
     # return all companies that user is owner of
     con = funcs1.connect_to_db()
-    sql = "select * from company where ucid = %s"
+    sql = "select * from company_backup where ucid = %s"
     with con:
         with con.cursor() as cursor:
             cursor.execute(sql, ucid)
@@ -44,7 +44,7 @@ def company_update(ucid, name, key):
     con = funcs1.connect_to_db()
 
     # get current company record
-    sql = "select owner_uuid from company where ucid = %s"
+    sql = "select owner_uuid from company_backup where ucid = %s"
     with con:
         with con.cursor() as cursor:
             cursor.execute(sql, ucid)
@@ -54,12 +54,12 @@ def company_update(ucid, name, key):
             user = int(user_funcs.get_uuid_from_key(key))
             # return user
             if owner_id == user:
-                sql = "update company set company_name = %s where owner_uuid = %s and ucid = %s"
+                sql = "update company_backup set company_name = %s where owner_uuid = %s and ucid = %s"
                 cursor.execute(sql, (name, user, ucid))
                 con.commit()
 
                 # return new company record
-                sql = "select * from company where ucid = %s"
+                sql = "select * from company_backup where ucid = %s"
                 cursor.execute(sql, ucid)
                 return jsonify({'code': 200, 'message': 'Company details successfully updated'})
             else:
